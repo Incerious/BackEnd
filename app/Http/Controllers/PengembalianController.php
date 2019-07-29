@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Model\pengembalian;
-use App\Model\member;
-use App\Model\buku;
+
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use DB;
+use App\Model\pengembalian;
+use App\Model\peminjaman;
 
 class PengembalianController extends Controller
 {
@@ -17,6 +17,8 @@ class PengembalianController extends Controller
     public function index()
     {
         //
+        $pengembalian = pengembalian::all();
+        return view('pengembalian.index', ['pengembalian'=>$pengembalian]);
     }
 
     /**
@@ -37,14 +39,15 @@ class PengembalianController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // $pengembalian = pengembalian::create($request->all());
+
         $pengembalian = pengembalian::create([
-          'admin_id'=>$request->admin_id,
-          'buku_id'=>$request->buku_id,
-          'member_id'=>$request->member_id,
+            'pinjaman_id'=>$request->peminjaman_id,
+
         ]);
-          // $pengembalian = pengembalian::create($request->all());
-        return redirect()->route('member.show', ['id'=>$pengembalian->member->id]);
+
+
+        return redirect()->route('peminjaman.destroy', ['id'=>$pengembalian->peminjaman->id]);
     }
 
     /**
