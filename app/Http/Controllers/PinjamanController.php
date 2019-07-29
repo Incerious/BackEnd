@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Model\peminjaman;
+use App\Model\pengembalian;
 use App\Model\member;
 use App\Model\buku;
 use Illuminate\Http\Request;
@@ -38,8 +39,26 @@ class PinjamanController extends Controller
     public function store(Request $request)
     {
         //
-        $peminjaman = peminjaman::create($request->all());
+        
+        $buku = buku::find($request->buku_id);
+        $jumlah = $buku->qty;
+        $buku->qty = $jumlah - 1;
+        $buku->save();
+
+
+        // $peminjaman = peminjaman::create($request->all());
+        $nqty=1;
+        $peminjaman = peminjaman::create([
+            'admin_id'=>$request->admin_id,
+            'member_id'=>$request->member_id,
+            'buku_id'=>$request->buku_id,
+            'qty'=>$nqty,
+        ]);
+
+         
          return redirect()->route('member.show', ['id'=>$peminjaman->member->id]);
+
+         
     }
 
     /**
@@ -62,7 +81,6 @@ class PinjamanController extends Controller
     public function edit($id)
     {
         //
-
     }
 
     /**
@@ -83,11 +101,33 @@ class PinjamanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request,$id)
     {
-        //
+
+
+
+        // $peminjaman = peminjaman::create($request->all());
+
+        $pengembalian = pengembalian::create([
+            'pinjaman_id'=>$request->pinjaman_id,
+            'admin_id'=>$request->admin_id,
+            'member_id'=>$request->member_id,
+            'buku_id'=>$request->buku_id,
+            'qty'=>$request ->qty,
+        ]);
+
+        // 
+
+        $buku = buku::find($request->buku_id);
+        $jumlah = $buku->qty;
+        $buku->qty = $jumlah + 1;
+        $buku->save();
+
+        // 
         $peminjaman = peminjaman::find($id);
+
         $peminjaman->delete();
+
         return redirect()->route('member.show', ['id'=>$peminjaman->member->id]);
     }
 }
