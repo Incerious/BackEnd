@@ -22,7 +22,7 @@
         </div>
 
         <div class="col-md-4">
-          <a href="#" class="btn btn-primary float-right">+ Add Buku</a>
+          <a href="{{route('buku.create')}}" class="btn btn-primary float-right">+ Add Buku</a>
           <br><br>
         </div>
       </div>
