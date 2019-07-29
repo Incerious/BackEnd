@@ -16,14 +16,20 @@ header('Access-Control-Allow-Headers:  Content-Type, X-Auth-Token, Origin, Autho
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 Route::group(['middleware' => ['api']], function(){
-  // member
-  Route::get('get-member', 'ApiController@getmember');
-  Route::post('pst-member', 'ApiController@postmember');
-  // Peminjaman
-  Route::get('gtpeminjaman/{id}', 'ApiController@getpeminjaman');
 });
+
+// member
+Route::get('get-member', 'ApiController@getmember');
+Route::get('get-member1/{id}', 'ApiController@getmember1');
+Route::post('pst-member', 'ApiController@postmember');
+Route::delete('delmember', 'ApiController@postmember');
+// Peminjaman
+Route::get('gtpeminjaman/{id}', 'ApiController@getpeminjaman');
+Route::post('pstpeminjaman', 'ApiController@postpeminjaman');
+// buku
+Route::get('getbuku', 'ApiController@fuckbuku');
