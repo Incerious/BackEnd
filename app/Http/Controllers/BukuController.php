@@ -5,7 +5,7 @@ use App\Model\buku;
 use App\Model\kategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use File;
 class BukuController extends Controller
 {
     /**
@@ -88,7 +88,7 @@ class BukuController extends Controller
         //
         $kategori = kategori::all();
         $buku = buku::where('id', $id)->first();
-        return view("buku.edit", ['buku'=>$buku],['kategori'=>kategori]);
+        return view("buku.edit", ['buku'=>$buku],['kategori'=>$kategori]);
     }
 
     /**
@@ -101,16 +101,30 @@ class BukuController extends Controller
     public function update(Request $request, $id)
     {
         //
-        buku::where('id', $id)
-        ->update([
-          'nama_buku' => $request -> nm,
-          'kategori_id' => $request -> kategori_id,
-          'qty' => $request -> qty,
-          'keterangan' => $request -> kt,
-          'cover' => $request -> cv,
-          'denda' => $request -> ded,
-        ]);
-        return redirect()->route('buku.index');
+        $this->validate($request, [
+                'file' => 'required|file|image|mimes:jpeg,png,jpg|max:2048',
+            ]);
+
+            // menyimpan data file yang diupload ke variabel $file
+            $file = $request->file('file');
+
+            $nama_file = time()."_".$file->getClientOriginalName();
+
+                    // isi dengan nama folder tempat kemana file diupload
+            $tujuan_upload = 'img';
+            $file->move($tujuan_upload,$nama_file);
+
+            buku::where('id', $id)
+            ->update([
+            // buku::create([
+              'nama_buku' => $request -> nm,
+              'kategori_id' => $request -> kategori_id,
+              'qty' => $request -> stck,
+              'keterangan' => $request -> kt,
+              'cover' => $nama_file,
+              'denda' => $request -> ded,
+            ]);
+            return redirect()->route('buku.index');
     }
 
     /**
@@ -122,7 +136,15 @@ class BukuController extends Controller
     public function destroy($id)
     {
         //
+        // hapus file
+        $buku = buku::where('id',$id)->first();
+        File::delete('img/'.$buku->cover);
+     
+        // hapus data
         buku::where('id', $id)->delete();
+
+     
+        return redirect()->back();
         return redirect()->route('buku.index');
     }
 }
