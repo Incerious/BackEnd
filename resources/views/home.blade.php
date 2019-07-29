@@ -18,8 +18,8 @@
 
                       @if(Auth::user()->hak_akses=='Admin')
                       <div class="panel-body">
-                       Hello {{Auth::user()->name}}<br>
-                       jabatan anda : {{Auth::user()->hak_akses}}
+                          Hello {{Auth::user()->name}}<br>
+                          jabatan anda : {{Auth::user()->hak_akses}}
                       </div>
                       @else
                       <div class="panel-body">
