@@ -1,7 +1,6 @@
-@extends('navbar.app')
+ @extends('navbar.app')
 @section('content')
 
-<script src="{{ asset('js/jquery.min.js') }}" defer></script>
 <div class="row">
 	<div class="col-md-12">
 		<h2>Detail Member</h2>
@@ -10,6 +9,7 @@
 				~(=w= ~)
 			</strong>
 		</a>
+
 		<button class="btn btn-primary float-right" data-toggle="modal" data-target="#exampleModal">
 			Peminjaman Buku
 		</button>
@@ -25,7 +25,7 @@
 
 	<table class="table">
 		<tr>
-			<th>Id</th>
+			<th>ID Buku</th>
 			<th>Nama Buku</th>
 			<th>Jumlah</th>
 			<th>Tanggal</th>
@@ -34,47 +34,59 @@
 
 		@foreach($peminjaman as $pem)
 		<tr>
-			<td>{{ $pem->id}}</td>
+
+
+			<td>{{ $pem->buku->id }}</td>
 			<td>{{ $pem->buku->nama_buku}}</td>
-			<td>{{ $pem->buku->qty}}</td>
+			<td>{{ $pem->qty}}</td>
 			<td>{{$pem->created_at}}</td>
 			<td>
-              		<!-- <a class="btn btn-primary" href="{{route('pengembalian.store', $pem->id)}}">Kembali</a> -->
+
+            <form action="{{route('peminjaman.destroy', $pem->id)}}" method="post">
 
               	<div>
+              		<input type="hidden" name="pinjaman_id" value="{{$pem->id}}">
+              		<input type="hidden" name="admin_id" value="{{$pem->admin_id}}">
+              		<input type="hidden" name="member_id" value="{{$member->id}}">
+              		<input type="hidden" name="buku_id" value="{{$pem->buku->id}}">
+              		<input type="hidden" name="qty" value="{{$pem->qty}}">
 
-									<form class="" action="{{route('peminjaman.destroy', $pem->id)}}" method="post">
-										<a href="{{ route('member.show',$member->id) }}" data-toggle="modal" data-target="#myEditModal{{ $pem->buku->id }}" class=" text-info ">
-											test
-										</a>
-											{{csrf_field()}}
-											{{method_field('DELETE')}}
-											<button type="submit" class="btn btn-danger">delete</button>
-										</form>
+
+					{{csrf_field()}}
+    		        {{method_field('DELETE')}}
+					<button type="submit" class="btn btn-secondary">Kembalikan Buku</button><br>
+
+
 				</div>
+            </form>
+
 				<!--  -->
 
+				<!--  -->
 
-<div id="myEditModal{{ $pem->buku->id }}" class="modal fade" role="dialog">
+				<div class="modal fade" id="exampleModal1">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title">
 					Kembalikan buku ini ?
 				</h5>
+				<hr>
+				<!-- <input type="text" name="bid" value="{{$pem->buku->buku_id}}"> -->
+
 			</div>
 
 			<div class="modal-body">
 				<form action="{{route('pengembalian.store', $pem->id)}}" method="post">
 
-					<input type="hidden" name="member_id" value="{{ $member->id}}">
-
-					<input type="text" name="" value="{{}}">
+					<input type="hidden" name="peminjaman_id" value="{{$pem->id}}">
 					{{ csrf_field()}}
-					<!-- <output name="">{{$pem->buku->id}}</output> -->
+
+
+
 					<div class="form-group">
 						<button type="button" class="btn btn-warning"
-									data-dismiss="modal">Batal</button>
+					data-dismiss="modal">Batal</button>
 						<button class="btn btn-primary" type="submit">Kembalikan</button>
 					</div>
 				</form>
@@ -86,10 +98,12 @@
 		</div>
 	</div>
 </div>
+
+
     			<!--  -->
 			</td>
 		</tr>
-@endforeach
+		@endforeach
 	</table>
 
 <div class="modal fade" id="exampleModal">
@@ -107,6 +121,7 @@
 					<input type="hidden" name="admin_id" value="{{Auth::user()->id}}">
 
 					<input type="hidden" name="member_id" value="{{ $member->id}}">
+
 					{{ csrf_field()}}
 
 					<div class="form-group">
