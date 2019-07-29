@@ -19,7 +19,7 @@
 
 
 		<label>ID member </label>
-		<input class="form-control"  type="text" name="id" readonly="true" value="{{$member->id}}" required> <br>
+		<input class="form-control"  type="text" name="id" readonly="true" value="{{$member->id}}"> <br>
 
 		<label>Nama Member </label>
 		<input class="form-control"  type="text" name="nm" value="{{$member->username}}" required> <br>
