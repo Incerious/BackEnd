@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Edit Kategori</title>
+    <title></title>
     <meta charset="utf-8">
 
 
@@ -24,6 +24,7 @@
       <a href="{{route('kategori.index')}}" class="nav-item nav-link"> List Kategori</a>
       <a href="{{route('buku.index')}}" class="nav-item nav-link">  List Buku</a>
       <a href="{{route('member.index')}}" class="nav-item nav-link">  List Member</a>
+      <a href="{{route('pengembalian.index')}}" class="nav-item nav-link">  List Pengembalian</a>
     </div>
   </div>
 
