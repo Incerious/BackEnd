@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Model\member;
-use App\Model\admin;
+use App\User;
 use App\Model\buku;
 use App\Model\peminjaman;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +19,8 @@ class MemberController extends Controller
     {
         //
         $member = member::all();
-        return view("member.index", ['member'=>$member]);
+        $buku = buku::all();
+        return view("member.index", ['member'=>$member, 'buku'=>$buku]);
     }
 
     /**
@@ -48,6 +49,8 @@ class MemberController extends Controller
             'no_hp'=>$request->hp,
             'tanggal_lahir'=>$request->tgl,
         ]);
+
+
          return redirect()->route('member.show', ['id'=>$member->id]);
     }
 
@@ -63,11 +66,13 @@ class MemberController extends Controller
         //
         $member=member::findOrFail($id);
         $peminjaman = peminjaman::all()->where('member_id', $id);
+        $user = User::all();
         $buku = buku::all();
+
         return view('member.show') -> with('member', $member)
         -> with('peminjaman', $peminjaman)
         -> with('buku', $buku)
-        ;
+        -> with('user', $user);
     }
 
     /**
@@ -81,7 +86,7 @@ class MemberController extends Controller
         //
         $member = member::where('id',$id)->first();
 
-        return view ("member.edit",['member'=> $member]);
+      return view ("member.edit",['member'=> $member]);
     }
 
     /**
@@ -114,5 +119,11 @@ class MemberController extends Controller
         //
         member::where('id', $id)->delete();
       return redirect()->route('member.index');
+    }
+
+    public function kembali($id){
+        // $kategori = kategori::all();
+        $buku = buku::where('id', $id)->first();
+        return view("buku.edit", ['buku'=>$buku],['kategori'=>kategori]);
     }
 }
